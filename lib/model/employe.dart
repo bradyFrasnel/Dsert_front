@@ -1,8 +1,5 @@
-// lib/model/employe.dart
-
 import 'dart:convert';
 
-// Helper function to decode a list of Employe from a string
 List<Employe> employeFromJson(String str) => List<Employe>.from(json.decode(str).map((x) => Employe.fromJson(x)));
 
 // Helper function to encode a list of Employe to a string
@@ -10,26 +7,27 @@ String employeToJson(List<Employe> data) => json.encode(List<dynamic>.from(data.
 
 class Employe {
   final String? id;
-  // 1. Remplacer 'nom' par 'nomFamille' et 'prenom' pour correspondre à l'API
   final String? nomFamille;
   final String? prenom;
   final String? email;
-  final String? motDePasse;
+  final String? password;
   final String? role;
   final DateTime? dateEmbauche;
   final dynamic dateSortie; // Garder en 'dynamic' si ça peut être null
   final bool? actif;
+  final String? imageUrl;
 
   Employe({
     this.id,
     this.nomFamille,
     this.prenom,
     this.email,
-    this.motDePasse,
+    this.password,
     this.role,
     this.dateEmbauche,
     this.dateSortie,
     this.actif,
+    this.imageUrl,
   });
 
   // 2. Créer un "getter" pour avoir le nom complet facilement
@@ -45,11 +43,14 @@ class Employe {
     nomFamille: json["nomFamille"],
     prenom: json["prenom"],
     email: json["email"],
-    motDePasse: json["motDePasse"],
+    password: json["password"],
     role: json["role"],
-    dateEmbauche: json["dateEmbauche"] == null ? null : DateTime.parse(json["dateEmbauche"]),
+    dateEmbauche: json["dateEmbauche"] == null 
+        ? null 
+        : DateTime.tryParse(json["dateEmbauche"].toString()),
     dateSortie: json["dateSortie"],
     actif: json["actif"],
+    imageUrl: json["imageUrl"] ?? json["photoProfil"], // Gérer les deux noms de champs
   );
 
   // Mettre à jour la méthode 'toJson' (utile si vous envoyez des données)
@@ -58,10 +59,11 @@ class Employe {
     "nomFamille": nomFamille,
     "prenom": prenom,
     "email": email,
-    "motDePasse": motDePasse,
+    "password": password,
     "role": role,
     "dateEmbauche": dateEmbauche?.toIso8601String(),
     "dateSortie": dateSortie,
     "actif": actif,
+    "imageUrl": imageUrl,
   };
 }

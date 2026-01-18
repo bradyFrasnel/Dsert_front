@@ -14,13 +14,11 @@ class Accueil extends StatefulWidget {
 
 class _AccueilState extends State<Accueil> {
   // Fonction de déconnexion propre
-  // dans accueil.dart
   Future<void> _logout() async {
     // Supprimer le token
-    final prefs = await SharedPreferences.getInstance(); // <-- ERREUR ICI
+    final prefs = await SharedPreferences.getInstance();
     await prefs.remove('jwt_token');
 
-    // Naviguer vers la page de connexion
     if (mounted) {
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => const LoginPage()),
@@ -32,22 +30,47 @@ class _AccueilState extends State<Accueil> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
       appBar: AppBar(
-        title: const Text('Tableau de Bord'),
         backgroundColor: Couleur.principale,
         foregroundColor: Colors.white,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications_none),
-            onPressed: () {
-              // Logique pour les notifications
-            },
+        elevation: 4.0,
+
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(20),
           ),
-        ],
+        ),
+
+        flexibleSpace: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 50.0,
+              vertical: 15.0
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Text(
+                    //widget.user.prenom,
+                    'D\'Sert',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 26,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        toolbarHeight: kToolbarHeight + 50, // Hauteur de l'appBar.
       ),
+
       // Le Drawer utilise les informations de 'widget.user'
       drawer: _buildDrawer(),
-      // Le body est le tableau de bord dynamique
       body: widget.user.role == 'MANAGER' || widget.user.role == 'ADMIN'
           ? _buildManagerDashboard()
           : _buildEmployeDashboard(),
@@ -92,12 +115,6 @@ class _AccueilState extends State<Accueil> {
       ),
     );
   }
-
-  //
-  // =======================================================================
-  // LES WIDGETS DU TABLEAU DE BORD RESTENT LES MÊMES QUE VOUS AVIEZ
-  // =======================================================================
-  //
 
   Widget _buildManagerDashboard() {
     return ListView(

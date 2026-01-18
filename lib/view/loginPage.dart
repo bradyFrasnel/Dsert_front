@@ -4,7 +4,10 @@ import 'package:dsertmobile/component/couleur.dart';
 import 'package:dsertmobile/mainScaffold.dart';
 import 'package:dsertmobile/model/employe.dart';
 import 'package:dsertmobile/service/apiService.dart';
+import 'package:dsertmobile/view/register.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:dsertmobile/controller/userController.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -14,14 +17,10 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  // Clé pour le formulaire
   final _formKey = GlobalKey<FormState>();
 
-  // Contrôleurs pour les champs de texte
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-
-  // Pour gérer l'état de chargement
   bool _isLoading = false;
 
   // Instance de notre service API
@@ -53,6 +52,10 @@ class _LoginPageState extends State<LoginPage> {
       if (result['success'] == true && mounted) {
         // On récupère les infos de l'utilisateur avec la clé 'user'
         final Employe user = Employe.fromJson(result['user']);
+
+        // Stocker l'utilisateur dans le UserController
+        final userController = Provider.of<UserController>(context, listen: false);
+        userController.setUtilisateur(user);
 
         // On navigue vers la page principale et on supprime toutes les routes précédentes
         Navigator.pushReplacement(
@@ -96,19 +99,19 @@ class _LoginPageState extends State<LoginPage> {
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            padding: const EdgeInsets.symmetric(horizontal: 30.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Icon(
                   Icons.lock_outline_sharp,
-                  size: 100,
+                  size: 80,
                   color: Couleur.principale,
                 ),
                 const SizedBox(height: 20),
                 const Text(
-                  'Bienvenue à D\'Sert !',
+                  'Welcome to D\'Sert !',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 28,
@@ -117,8 +120,15 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 const SizedBox(height: 8),
+                Text('Your business application',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Couleur.texteSecondaire
+                  ),
+                ),
                 Text(
-                  'Connectez-vous pour continuer',
+                  'Login to continue 🍀',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 16,
@@ -214,6 +224,27 @@ class _LoginPageState extends State<LoginPage> {
                     style: TextStyle(fontSize: 18, color: Colors.white),
                   ),
                 ),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Je n\'est pas de compte.'),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => const RegisterPage()) );
+                      },
+                      child: Text(
+                        'Iscription !!',
+                        style: TextStyle(
+                          color: Couleur.secondaire
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+
               ],
             ),
           ),

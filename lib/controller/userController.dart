@@ -1,5 +1,3 @@
-// lib/controller/user_controller.dart
-
 import 'package:dsertmobile/model/employe.dart';
 import 'package:dsertmobile/service/apiService.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +7,7 @@ enum UserState { initial, loading, loaded, error }
 
 class UserController with ChangeNotifier {
   final ApiService _apiService = ApiService();
+  Employe? _utilisateur; // Ajout de l'utilisateur courant
 
   // Variables d'état privées
   List<Employe> _users = [];
@@ -19,10 +18,16 @@ class UserController with ChangeNotifier {
   List<Employe> get users => _users;
   UserState get state => _state;
   String get errorMessage => _errorMessage;
+  Employe? get utilisateur => _utilisateur; // Getter pour l'utilisateur courant
+  Employe? get currentUser => _utilisateur; // Alias pour compatibilité
+
+  // Méthode pour définir l'utilisateur courant
+  void setUtilisateur(Employe? utilisateur) {
+    _utilisateur = utilisateur;
+    notifyListeners();
+  }
 
   // Méthode principale pour charger les utilisateurs
-  // Dans la classe UserController
-
   Future<void> fetchUsers() async {
     try {
       // 1. On passe à l'état de chargement
@@ -30,10 +35,15 @@ class UserController with ChangeNotifier {
       notifyListeners(); // Notifie la vue qu'un changement a eu lieu
 
       // 2. On appelle le service pour récupérer les données
-      _users = await _apiService.getUsers(); // CORRIGÉ : ajout des parenthèses
+      final response = await _apiService.getUsers();
 
       // 3. Si tout va bien, on passe à l'état chargé
-      _state = UserState.loaded;
+      if (response['success'] == true && response['data'] != null) {
+        final List<dynamic> data = response['data'] as List<dynamic>;
+        final List<Employe> liste = data.map((item) => Employe.fromJson(item)).toList();
+        _users = liste;
+        _state = UserState.loaded;
+      }
     } catch (e) {
       // 4. En cas d'erreur, on passe à l'état d'erreur et on stocke le message
       _state = UserState.error;
@@ -44,5 +54,4 @@ class UserController with ChangeNotifier {
       notifyListeners();
     }
   }
-
 }

@@ -3,7 +3,6 @@ import 'package:dsertmobile/service/apiService.dart';
 class LoginController {
   final ApiService _apiService = ApiService();
 
-  // La méthode ne prend plus de BuildContext.
   // Elle retourne directement le résultat de l'ApiService.
   Future<Map<String, dynamic>> loginUser(String email, String password) async {
     try {

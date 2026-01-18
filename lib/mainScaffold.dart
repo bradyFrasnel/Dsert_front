@@ -5,6 +5,7 @@ import 'package:dsertmobile/model/convocation.dart';
 import 'package:dsertmobile/model/employe.dart';
 import 'package:dsertmobile/view/accueil.dart';
 import 'package:dsertmobile/view/convocation.dart';
+import 'package:dsertmobile/view/convocationListe.dart';
 import 'package:dsertmobile/view/liste.dart';
 import 'package:flutter/material.dart';
 
@@ -31,9 +32,7 @@ class _MainScaffoldState extends State<MainScaffold> {
     _pages = [
       Accueil(user: widget.user),
       const ListePage(),
-
-      // 3. La page Convocation, pour l'instant vide ou statique.
-      //const Convocation(titre: 'Mes Convocations', description: ''),
+      const ConvocationListePage(), // Page de liste des convocations
     ];
   }
 
@@ -66,20 +65,19 @@ class _MainScaffoldState extends State<MainScaffold> {
             label: 'Liste',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.mail_outline),
-            activeIcon: Icon(Icons.mail),
+            icon: Icon(Icons.calendar_today_outlined),
+            activeIcon: Icon(Icons.calendar_today),
             label: 'Convocations',
           ),
         ],
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
 
-        // Style pour correspondre à votre thème
         type: BottomNavigationBarType.fixed,
         backgroundColor: Colors.white,
-        selectedItemColor: Couleur.principale, // Utilisons nos couleurs définies
+        selectedItemColor: Couleur.principale,
         unselectedItemColor: Couleur.texteSecondaire,
-        selectedFontSize: 12, // Ajustement visuel pour un look plus propre
+        selectedFontSize: 12,
       ),
     );
   }
